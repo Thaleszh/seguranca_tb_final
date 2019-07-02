@@ -1,10 +1,12 @@
 #!/bin/bash
 
-echo "Doing $1 operation on file $3"
+
 if [ "$1" == "sign" ]; then
 	if [ "$#" -lt 3 ]; then
-		echo -e "\nIvalid Usage\nUsage: $0 sign <pcks12_file> <document>"
+		echo -e "Invalid Usage\nUse: $0 sign <pcks12_file> <document>"
 	else
+		echo "Doing $1 operation on file $3"
+
 		echo -ne "Password for file:\n"
 
 		read -s password
@@ -15,26 +17,29 @@ if [ "$1" == "sign" ]; then
 
 		rm /tmp/$2.id_rsa
 
-		echo "Assinatura escrita em $3.sha256"
+		echo "Signature written in $3.sha256"
 
 	fi
 
 elif [ "$1" == "verify" ]; then
 	if [ "$#" -lt 4 ]; then
 		if [ "$#" -lt 3 ]; then
-		echo -e "\nInvalid Usage\nUsage: $0 verify <public key> <document> [optional: <signature>]"
+		echo -e "Invalid Usage\nUse: $0 verify <public key> <document> [optional: <signature>]"
 		else
+			echo "Doing $1 operation on file $3.sha256"
 			openssl dgst -sha256 -verify $2 -signature $3.sha256 $3
 		fi
 	else
+		echo "Doing $1 operation on file $4"
 		openssl dgst -sha256 -verify $2 -signature $4 $3
 	fi
 
 elif [ "$1" == "public_key" ]; then
 	if [ "$#" -lt 3 ]; then
 		if [ "$#" -lt 2 ]; then
-		echo -e "\nInvalid Usage\nUsage: $0 public_key <pcks12_file>  [optional: <key_name>]"
+		echo -e "Invalid Usage\Use: $0 public_key <pcks12_file>  [optional: <key_name>]"
 		else
+			echo "Doing $1 operation on file $3"
 			echo -ne "Password for file:\n"
 			read -s password
 			openssl pkcs12 -in $2 -clcerts -nokeys -password pass:$password -out /tmp/$2.crt
@@ -46,6 +51,7 @@ elif [ "$1" == "public_key" ]; then
 			echo "Saved public key as $2.pub"
 		fi
 	else
+		echo "Doing $1 operation on file $3"
 		echo -ne "Password for file:\n"
 		read -s password
 		openssl pkcs12 -in $2 -clcerts -nokeys -password pass:$password -out /tmp/$2.crt
@@ -56,7 +62,7 @@ elif [ "$1" == "public_key" ]; then
 
 		echo "Saved public key as $2.pub"
 	fi
-	
+
 else
-	echo "Only sign, verify  and public_key operations supported"
+	echo "Only sign, verify and public_key operations supported"
 fi
