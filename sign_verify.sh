@@ -37,7 +37,7 @@ elif [ "$1" == "verify" ]; then
 elif [ "$1" == "public_key" ]; then
 	if [ "$#" -lt 3 ]; then
 		if [ "$#" -lt 2 ]; then
-		echo -e "Invalid Usage\Use: $0 public_key <pcks12_file>  [optional: <key_name>]"
+		echo -e "Invalid Usage\nUse: $0 public_key <pcks12_file>  [optional: <key_name>]"
 		else
 			echo "Doing $1 operation on file $3"
 			echo -ne "Password for file:\n"
